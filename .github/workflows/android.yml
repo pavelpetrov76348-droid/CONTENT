@@ -1,0 +1,23 @@
+name: Build Android APK
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install buildozer cython kivy
+      - name: Build with Buildozer
+        run: buildozer android debug
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: bin/*.apk
